@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sumon Biriyani - Sales Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin: 10px 0;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #28a745;
+            outline: none;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sumon Biriyani - Sales Calculator</h1>
+
+        <!-- Tehari -->
+        <div class="input-group">
+            <label>Tehari (1 kg = 10 pcs, 1 pc = 120 Tk)</label>
+            <input type="number" id="tehari-weight" placeholder="Enter weight in kg" oninput="updateQuantity('tehari', 10)">
+            <input type="number" id="tehari-quantity" placeholder="Enter quantity" oninput="markAsEdited('tehari')">
+        </div>
+
+        <!-- Khichuri -->
+        <div class="input-group">
+            <label>Khichuri (1 kg = 10 pcs, 1 pc = 40 Tk)</label>
+            <input type="number" id="khichuri-weight" placeholder="Enter weight in kg" oninput="updateQuantity('khichuri', 10)">
+            <input type="number" id="khichuri-quantity" placeholder="Enter quantity" oninput="markAsEdited('khichuri')">
+        </div>
+
+        <!-- Polaw -->
+        <div class="input-group">
+            <label>Polaw (1 kg = 8 pcs, 1 pc = 40 Tk)</label>
+            <input type="number" id="polaw-weight" placeholder="Enter weight in kg" oninput="updateQuantity('polaw', 8)">
+            <input type="number" id="polaw-quantity" placeholder="Enter quantity" oninput="markAsEdited('polaw')">
+        </div>
+
+        <!-- Roast -->
+        <div class="input-group">
+            <label>Roast (1 pc = 100 Tk)</label>
+            <input type="number" id="roast-quantity" placeholder="Enter quantity">
+        </div>
+
+        <!-- Meat -->
+        <div class="input-group">
+            <label>Meat (1 kg = 10 pcs, 0.5 kg = 120 Tk)</label>
+            <input type="number" id="meat-weight" placeholder="Enter weight in kg" oninput="updateQuantity('meat', 10)">
+            <input type="number" id="meat-quantity" placeholder="Enter quantity" oninput="markAsEdited('meat')">
+        </div>
+
+        <!-- Egg -->
+        <div class="input-group">
+            <label>Egg (1 pc = 20 Tk)</label>
+            <input type="number" id="egg-quantity" placeholder="Enter quantity">
+        </div>
+
+        <!-- Kacchi -->
+        <div class="input-group">
+            <label>Kacchi (1 kg = 10 pcs, 1 pc = 150 Tk)</label>
+            <input type="number" id="kacchi-weight" placeholder="Enter weight in kg" oninput="updateQuantity('kacchi', 10)">
+            <input type="number" id="kacchi-quantity" placeholder="Enter quantity" oninput="markAsEdited('kacchi')">
+        </div>
+
+        <button onclick="calculateTotal()">Calculate Total Sales</button>
+        <h2 id="result">Total Sales: 0 Taka</h2>
+    </div>
+
+    <script>
+        function updateQuantity(item, piecesPerKg) {
+            let weightInput = document.getElementById(`${item}-weight`);
+            let quantityInput = document.getElementById(`${item}-quantity`);
+            let weight = parseFloat(weightInput.value) || 0;
+            let autoQuantity = weight * piecesPerKg;
+
+            if (!quantityInput.dataset.edited) {
+                quantityInput.value = autoQuantity || "";
+            }
+        }
+
+        function markAsEdited(item) {
+            document.getElementById(`${item}-quantity`).dataset.edited = true;
+        }
+
+        function calculateTotal() {
+            const prices = {
+                tehari: 120, khichuri: 40, polaw: 40, 
+                roast: 100, meat: 120, egg: 20, kacchi: 150
+            };
+            const piecesPerKg = {
+                tehari: 10, khichuri: 10, polaw: 8, 
+                meat: 10, kacchi: 10
+            };
+
+            let totalSales = 0;
+
+            Object.keys(prices).forEach(item => {
+                let weightInput = document.getElementById(`${item}-weight`);
+                let quantityInput = document.getElementById(`${item}-quantity`);
+
+                let weight = parseFloat(weightInput?.value) || 0;
+                let quantity = parseFloat(quantityInput?.value) || (weight * (piecesPerKg[item] || 1));
+
+                totalSales += (quantity * prices[item]);
+            });
+
+            document.getElementById("result").innerText = `Total Sales: ${totalSales} Taka`;
+        }
+    </script>
+</body>
+</html>
