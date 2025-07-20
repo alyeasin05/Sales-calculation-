@@ -1,409 +1,330 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sumon Biryani Sales Calculator</title>
+    <title>Sumon Biriyani - Sales Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f8fafc;
         }
-        
-        .calculator-container {
-            background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        .card-header {
+            background: linear-gradient(135deg, #b91c1c, #dc2626);
         }
-        
-        .tab.active {
-            background-color: #e10000;
+        .btn-primary {
+            background: linear-gradient(135deg, #b91c1c, #dc2626);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #991b1b, #b91c1c);
+        }
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
+            border-color: #b91c1c;
+        }
+        .tab-button.active {
+            background-color: #b91c1c;
             color: white;
         }
-        
-        .input-field {
-            border: 1px solid #ddd;
-            transition: all 0.3s;
-        }
-        
-        .input-field:focus {
-            border-color: #e10000;
-            box-shadow: 0 0 0 2px rgba(225, 0, 0, 0.2);
-        }
-        
-        .btn-primary {
-            background-color: #e10000;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary:hover {
-            background-color: #c00000;
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            background-color: #6c757d;
-            transition: all 0.3s;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-        
-        .summary-card {
-            background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
-        }
-        
-        .header-bg {
-            background-color: #e10000;
-        }
-        
-        .total-summary {
-            background: linear-gradient(135deg, #ffeeee 0%, #fff5f5 100%);
-            border: 2px solid #e10000;
-        }
-        
-        @media print {
-            body {
-                background-color: #fff;
-            }
-            
-            .no-print {
-                display: none !important;
-            }
-            
-            .calculator-container {
-                box-shadow: none;
-                border: none;
-            }
-            
-            .total-summary {
-                break-inside: avoid;
-            }
-        }
-        
         @media (max-width: 640px) {
-            .calculator-container {
-                padding: 1rem;
+            .mobile-stack {
+                flex-direction: column;
             }
-            
-            .tab {
-                padding: 0.5rem;
-                font-size: 0.9rem;
+            .mobile-full {
+                width: 100%;
             }
         }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-6">
+<body class="min-h-screen p-4">
     <div class="max-w-6xl mx-auto">
-        <header class="text-center mb-8 header-bg text-white py-4 rounded-xl shadow-lg no-print">
-            <h1 class="text-3xl md:text-4xl font-bold">Sumon Biryani</h1>
-            <p class="text-lg">Sales Calculator</p>
-        </header>
-        
-        <div class="calculator-container rounded-xl p-4 md:p-6 border-2 border-red-600">
-            <!-- Tabs -->
-            <div class="flex mb-6 border-b-2 border-red-600 no-print">
-                <button id="food-tab" class="tab active flex-1 py-3 px-4 text-center font-medium rounded-t-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Food Items
-                </button>
-                <button id="drinks-tab" class="tab flex-1 py-3 px-4 text-center font-medium rounded-t-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Drinks
-                </button>
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-red-700">
+                <i class="fas fa-utensils mr-2"></i>Sumon Biriyani
+            </h1>
+            <div class="text-sm bg-white p-2 rounded shadow">
+                <span id="current-date"></span>
             </div>
-            
-            <!-- Food Calculator -->
-            <div id="food-calculator" class="calculator">
-                <h2 class="text-2xl font-bold mb-4 text-red-700 text-center">Food Order Calculator</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex space-x-2 mb-4 overflow-x-auto">
+            <button id="food-tab" class="tab-button active px-4 py-2 bg-white rounded-t-lg border border-b-0 border-gray-200 whitespace-nowrap">
+                <i class="fas fa-utensils mr-2"></i> Food Items
+            </button>
+            <button id="drinks-tab" class="tab-button px-4 py-2 bg-white rounded-t-lg border border-b-0 border-gray-200 whitespace-nowrap">
+                <i class="fas fa-glass-whiskey mr-2"></i> Drinks
+            </button>
+        </div>
+
+        <!-- Food Calculator -->
+        <div id="food-calculator" class="bg-white rounded-b-lg rounded-tr-lg shadow-lg overflow-hidden">
+            <div class="card-header py-3 px-6 text-white">
+                <h3 class="text-lg font-semibold">Food Order Calculator</h3>
+            </div>
+            <div class="p-4 md:p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <!-- Left Column -->
-                    <div class="bg-white p-4 rounded-lg shadow-md border border-red-200">
+                    <div class="space-y-3">
                         <!-- Tehari -->
-                        <div class="p-3 border rounded-lg mb-4">
-                            <h3 class="font-medium mb-2 text-red-700">Tehari</h3>
-                            <p class="text-xs text-gray-500 mb-2">1 kg = 12 pcs, 1 pc = 120 Tk</p>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Tehari (1 kg = 12 pcs, 1 pc = 120 Tk)</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block text-sm text-gray-600">Weight (kg)</label>
-                                    <input type="number" id="tehari-weight" class="input-field w-full p-2 rounded" 
-                                           oninput="updateQuantity('tehari', 12)" step="0.1" min="0">
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-600">Quantity (pcs)</label>
-                                    <input type="number" id="tehari-quantity" class="input-field w-full p-2 rounded" 
-                                           oninput="updateWeight('tehari', 12)" min="0">
-                                </div>
+                                <input type="number" id="tehari-weight" placeholder="Weight (kg)" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="updateQuantity('tehari', 12)">
+                                <input type="number" id="tehari-quantity" placeholder="Quantity" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="markAsEdited('tehari')">
                             </div>
                         </div>
-                        
+
                         <!-- Khichuri -->
-                        <div class="p-3 border rounded-lg mb-4">
-                            <h3 class="font-medium mb-2 text-red-700">Khichuri</h3>
-                            <p class="text-xs text-gray-500 mb-2">1 kg = 12 pcs, 1 pc = 40 Tk</p>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Khichuri (1 kg = 12 pcs, 1 pc = 40 Tk)</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block text-sm text-gray-600">Weight (kg)</label>
-                                    <input type="number" id="khichuri-weight" class="input-field w-full p-2 rounded" 
-                                           oninput="updateQuantity('khichuri', 12)" step="0.1" min="0">
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-600">Quantity (pcs)</label>
-                                    <input type="number" id="khichuri-quantity" class="input-field w-full p-2 rounded" 
-                                           oninput="updateWeight('khichuri', 12)" min="0">
-                                </div>
+                                <input type="number" id="khichuri-weight" placeholder="Weight (kg)" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="updateQuantity('khichuri', 12)">
+                                <input type="number" id="khichuri-quantity" placeholder="Quantity" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="markAsEdited('khichuri')">
                             </div>
                         </div>
-                        
+
                         <!-- Polaw -->
-                        <div class="p-3 border rounded-lg mb-4">
-                            <h3 class="font-medium mb-2 text-red-700">Polaw</h3>
-                            <p class="text-xs text-gray-500 mb-2">1 kg = 10 pcs, 1 pc = 40 Tk</p>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Polaw (1 kg = 10 pcs, 1 pc = 40 Tk)</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block text-sm text-gray-600">Weight (kg)</label>
-                                    <input type="number" id="polaw-weight" class="input-field w-full p-2 rounded" 
-                                           oninput="updateQuantity('polaw', 10)" step="0.1" min="0">
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-600">Quantity (pcs)</label>
-                                    <input type="number" id="polaw-quantity" class="input-field w-full p-2 rounded" 
-                                           oninput="updateWeight('polaw', 10)" min="0">
-                                </div>
+                                <input type="number" id="polaw-weight" placeholder="Weight (kg)" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="updateQuantity('polaw', 10)">
+                                <input type="number" id="polaw-quantity" placeholder="Quantity" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="markAsEdited('polaw')">
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Right Column -->
-                    <div class="bg-white p-4 rounded-lg shadow-md border border-red-200">
+                    <div class="space-y-3">
                         <!-- Roast -->
-                        <div class="p-3 border rounded-lg mb-4">
-                            <h3 class="font-medium mb-2 text-red-700">Roast</h3>
-                            <p class="text-xs text-gray-500 mb-2">1 pc = 100 Tk</p>
-                            <div>
-                                <label class="block text-sm text-gray-600">Quantity (pcs)</label>
-                                <input type="number" id="roast-quantity" class="input-field w-full p-2 rounded" min="0">
-                            </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Roast (1 pc = 100 Tk)</label>
+                            <input type="number" id="roast-quantity" placeholder="Quantity" 
+                                   class="input-focus w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none">
                         </div>
-                        
+
                         <!-- Meat -->
-                        <div class="p-3 border rounded-lg mb-4">
-                            <h3 class="font-medium mb-2 text-red-700">Meat</h3>
-                            <p class="text-xs text-gray-500 mb-2">1 kg = 10 pcs, 0.5 kg = 120 Tk</p>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Meat (1 kg = 10 pcs, 0.5 kg = 120 Tk)</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block text-sm text-gray-600">Weight (kg)</label>
-                                    <input type="number" id="meat-weight" class="input-field w-full p-2 rounded" 
-                                           oninput="updateQuantity('meat', 10)" step="0.1" min="0">
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-600">Quantity (pcs)</label>
-                                    <input type="number" id="meat-quantity" class="input-field w-full p-2 rounded" 
-                                           oninput="updateWeight('meat', 10)" min="0">
-                                </div>
+                                <input type="number" id="meat-weight" placeholder="Weight (kg)" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="updateQuantity('meat', 10)">
+                                <input type="number" id="meat-quantity" placeholder="Quantity" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="markAsEdited('meat')">
                             </div>
                         </div>
-                        
+
                         <!-- Egg -->
-                        <div class="p-3 border rounded-lg mb-4">
-                            <h3 class="font-medium mb-2 text-red-700">Egg</h3>
-                            <p class="text-xs text-gray-500 mb-2">1 pc = 20 Tk</p>
-                            <div>
-                                <label class="block text-sm text-gray-600">Quantity (pcs)</label>
-                                <input type="number" id="egg-quantity" class="input-field w-full p-2 rounded" min="0">
-                            </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Egg (1 pc = 20 Tk)</label>
+                            <input type="number" id="egg-quantity" placeholder="Quantity" 
+                                   class="input-focus w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none">
                         </div>
-                        
+
                         <!-- Kacchi -->
-                        <div class="p-3 border rounded-lg mb-4">
-                            <h3 class="font-medium mb-2 text-red-700">Kacchi</h3>
-                            <p class="text-xs text-gray-500 mb-2">1 kg = 10 pcs, 1 pc = 150 Tk</p>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Kacchi (1 kg = 10 pcs, 1 pc = 150 Tk)</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block text-sm text-gray-600">Weight (kg)</label>
-                                    <input type="number" id="kacchi-weight" class="input-field w-full p-2 rounded" 
-                                           oninput="updateQuantity('kacchi', 10)" step="0.1" min="0">
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-600">Quantity (pcs)</label>
-                                    <input type="number" id="kacchi-quantity" class="input-field w-full p-2 rounded" 
-                                           oninput="updateWeight('kacchi', 10)" min="0">
-                                </div>
+                                <input type="number" id="kacchi-weight" placeholder="Weight (kg)" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="updateQuantity('kacchi', 10)">
+                                <input type="number" id="kacchi-quantity" placeholder="Quantity" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full"
+                                       oninput="markAsEdited('kacchi')">
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="flex justify-between mt-6 no-print">
-                    <button onclick="calculateFood()" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">
-                        Calculate Total
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row justify-between mt-6 gap-2 mobile-stack">
+                    <button onclick="resetFoodForm()" 
+                            class="mobile-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        <i class="fas fa-redo mr-2"></i> Reset
                     </button>
-                    <button onclick="resetFoodForm()" class="btn-secondary px-6 py-2 rounded-lg text-white font-medium">
-                        Reset
+                    <button onclick="calculateTotal()" 
+                            class="mobile-full btn-primary px-6 py-2 text-white font-semibold rounded-md hover:opacity-90">
+                        <i class="fas fa-calculator mr-2"></i> Calculate Total
                     </button>
-                </div>
-            </div>
-            
-            <!-- Drinks Calculator -->
-            <div id="drinks-calculator" class="calculator hidden">
-                <h2 class="text-2xl font-bold mb-4 text-red-700 text-center">Drinks Sales Calculator</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Drinks Input Form -->
-                    <div class="bg-white p-4 rounded-lg shadow-md border border-red-200">
-                        <div class="mb-6">
-                            <table class="min-w-full">
-                                <thead>
-                                    <tr class="bg-red-100">
-                                        <th class="py-2 px-4 text-left">Drink</th>
-                                        <th class="py-2 px-4 text-center">Previous Stock</th>
-                                        <th class="py-2 px-4 text-center">Current Stock</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="py-2 px-4 font-medium">20 Tk</td>
-                                        <td class="py-2 px-4">
-                                            <input type="number" id="drink20-prev" class="input-field w-full p-2 rounded text-center" min="0">
-                                        </td>
-                                        <td class="py-2 px-4">
-                                            <input type="number" id="drink20-curr" class="input-field w-full p-2 rounded text-center" min="0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2 px-4 font-medium">30 Tk</td>
-                                        <td class="py-2 px-4">
-                                            <input type="number" id="drink30-prev" class="input-field w-full p-2 rounded text-center" min="0">
-                                        </td>
-                                        <td class="py-2 px-4">
-                                            <input type="number" id="drink30-curr" class="input-field w-full p-2 rounded text-center" min="0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2 px-4 font-medium">40 Tk</td>
-                                        <td class="py-2 px-4">
-                                            <input type="number" id="drink40-prev" class="input-field w-full p-2 rounded text-center" min="0">
-                                        </td>
-                                        <td class="py-2 px-4">
-                                            <input type="number" id="drink40-curr" class="input-field w-full p-2 rounded text-center" min="0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2 px-4 font-medium">50 Tk</td>
-                                        <td class="py-2 px-4">
-                                            <input type="number" id="drink50-prev" class="input-field w-full p-2 rounded text-center" min="0">
-                                        </td>
-                                        <td class="py-2 px-4">
-                                            <input type="number" id="drink50-curr" class="input-field w-full p-2 rounded text-center" min="0">
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot class="border-t-2 border-red-300">
-                                    <tr class="font-bold">
-                                        <td class="py-2 px-4">Total</td>
-                                        <td class="py-2 px-4 text-center" id="total-drink-prev">-</td>
-                                        <td class="py-2 px-4 text-center" id="total-drink-curr">-</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                        
-                        <div class="flex justify-between mt-6 no-print">
-                            <button onclick="calculateDrinks()" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">
-                                Calculate Drinks Sales
-                            </button>
-                            <button onclick="resetDrinksForm()" class="btn-secondary px-6 py-2 rounded-lg text-white font-medium">
-                                Reset
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Drinks Results -->
-                    <div class="bg-white p-4 rounded-lg shadow-md border border-red-200">
-                        <h3 class="text-xl font-semibold mb-4 text-red-700">Drinks Sales Results</h3>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white">
-                                <thead>
-                                    <tr class="bg-red-100">
-                                        <th class="py-2 px-4 text-left">Drink</th>
-                                        <th class="py-2 px-4 text-right">Previous</th>
-                                        <th class="py-2 px-4 text-right">Current</th>
-                                        <th class="py-2 px-4 text-right">Sold</th>
-                                        <th class="py-2 px-4 text-right">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="drinks-result-body">
-                                    <!-- Results will be inserted here -->
-                                </tbody>
-                                <tfoot class="border-t-2 border-red-300">
-                                    <tr class="font-bold">
-                                        <td class="py-2 px-4" colspan="3">Total</td>
-                                        <td class="py-2 px-4 text-right" id="total-drink-sold">0</td>
-                                        <td class="py-2 px-4 text-right" id="drinks-total">0 Tk</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Combined Total Summary Section -->
-            <div class="mt-8 total-summary p-5 rounded-lg shadow-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-bold text-red-700">Total Sales Summary</h2>
-                    <button onclick="printSummary()" class="btn-primary px-4 py-2 rounded-lg text-white font-medium no-print">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                        Print
-                    </button>
-                </div>
-                
-                <div class="border-b-2 border-red-500 pb-2 mb-4"></div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-xl font-semibold mb-3 text-red-600">Food Sales Summary</h3>
-                        <div id="combined-food-summary" class="pl-4">
-                            <p>No food items calculated yet.</p>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-xl font-semibold mb-3 text-red-600">Drinks Sales Summary</h3>
-                        <div id="combined-drinks-summary" class="pl-4">
-                            <p>No drinks calculated yet.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-6 pt-4 border-t-2 border-red-500">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-red-700">Grand Total:</h3>
-                        <div class="text-2xl font-bold text-red-700" id="grand-total">0 Tk</div>
-                    </div>
                 </div>
             </div>
         </div>
-        
-        <footer class="mt-8 text-center text-gray-600 no-print">
-            <p>© 2023 Sumon Biryani - Sales Calculator</p>
-        </footer>
+
+        <!-- Drinks Calculator (Hidden by default) -->
+        <div id="drinks-calculator" class="bg-white rounded-b-lg rounded-tr-lg shadow-lg overflow-hidden hidden">
+            <div class="card-header py-3 px-6 text-white">
+                <h3 class="text-lg font-semibold">Drinks Sales Calculator</h3>
+            </div>
+            <div class="p-4 md:p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <!-- Left Column -->
+                    <div class="space-y-3">
+                        <!-- 20 Tk Drinks -->
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">20 Tk Drinks</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="number" id="drink20-prev" placeholder="Previous Stock" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full">
+                                <input type="number" id="drink20-curr" placeholder="Current Stock" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full">
+                            </div>
+                        </div>
+
+                        <!-- 30 Tk Drinks -->
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">30 Tk Drinks</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="number" id="drink30-prev" placeholder="Previous Stock" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full">
+                                <input type="number" id="drink30-curr" placeholder="Current Stock" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-3">
+                        <!-- 40 Tk Drinks -->
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">40 Tk Drinks</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="number" id="drink40-prev" placeholder="Previous Stock" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full">
+                                <input type="number" id="drink40-curr" placeholder="Current Stock" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full">
+                            </div>
+                        </div>
+
+                        <!-- 50 Tk Drinks -->
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">50 Tk Drinks</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="number" id="drink50-prev" placeholder="Previous Stock" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full">
+                                <input type="number" id="drink50-curr" placeholder="Current Stock" 
+                                       class="input-focus px-3 py-2 border border-gray-300 rounded-md focus:outline-none w-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row justify-between mt-6 gap-2 mobile-stack">
+                    <button onclick="resetDrinksForm()" 
+                            class="mobile-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        <i class="fas fa-redo mr-2"></i> Reset
+                    </button>
+                    <button onclick="calculateDrinks()" 
+                            class="mobile-full btn-primary px-6 py-2 text-white font-semibold rounded-md hover:opacity-90">
+                        <i class="fas fa-calculator mr-2"></i> Calculate Drinks Sales
+                    </button>
+                </div>
+
+                <!-- Drinks Results -->
+                <div id="drinks-result" class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Drink</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Previous</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Current</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Sold</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="drinks-result-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Results will be inserted here -->
+                        </tbody>
+                        <tfoot class="bg-gray-50 font-semibold">
+                            <tr>
+                                <td class="px-4 py-2">Total</td>
+                                <td id="total-drink-prev" class="px-4 py-2">-</td>
+                                <td id="total-drink-curr" class="px-4 py-2">-</td>
+                                <td id="total-drink-sold" class="px-4 py-2">0</td>
+                                <td id="total-drink-amount" class="px-4 py-2">0 Tk</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Combined Result -->
+        <div id="result" class="mt-6 p-4 bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
+                <h3 class="text-lg font-semibold text-gray-800">Total Sales Summary</h3>
+                <button onclick="printSummary()" class="px-4 py-2 bg-gray-100 rounded-md hover:bg-gray-200 whitespace-nowrap">
+                    <i class="fas fa-print mr-2"></i> Print
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <!-- Food Summary -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-medium text-gray-700 mb-3 border-b pb-2">
+                        <i class="fas fa-utensils mr-2"></i> Food Sales
+                    </h4>
+                    <div id="food-summary">
+                        <p class="text-gray-500 text-center py-4">No food sales calculated yet</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t">
+                        <p class="flex justify-between font-medium">
+                            <span>Subtotal:</span>
+                            <span id="food-total">0 Tk</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Drinks Summary -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-medium text-gray-700 mb-3 border-b pb-2">
+                        <i class="fas fa-glass-whiskey mr-2"></i> Drinks Sales
+                    </h4>
+                    <div id="drinks-summary">
+                        <p class="text-gray-500 text-center py-4">No drinks sales calculated yet</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t">
+                        <p class="flex justify-between font-medium">
+                            <span>Subtotal:</span>
+                            <span id="drinks-total">0 Tk</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t">
+                <p class="flex justify-between text-xl font-bold">
+                    <span>Grand Total:</span>
+                    <span id="grand-total" class="text-red-600">0 Tk</span>
+                </p>
+            </div>
+        </div>
     </div>
 
     <script>
+        // Set current date
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { 
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+        });
+
         // Tab switching functionality
         document.getElementById('food-tab').addEventListener('click', function() {
             document.getElementById('food-calculator').classList.remove('hidden');
@@ -423,35 +344,18 @@
         function updateQuantity(item, piecesPerKg) {
             let weightInput = document.getElementById(`${item}-weight`);
             let quantityInput = document.getElementById(`${item}-quantity`);
-            
-            if (weightInput.dataset.updating) return;
-            
-            weightInput.dataset.updating = true;
             let weight = parseFloat(weightInput.value) || 0;
-            let autoQuantity = Math.round(weight * piecesPerKg);
-            quantityInput.value = autoQuantity || "";
-            delete weightInput.dataset.updating;
+            let autoQuantity = weight * piecesPerKg;
+
+            if (!quantityInput.dataset.edited) {
+                quantityInput.value = autoQuantity || "";
+            }
         }
 
-        // Update weight based on quantity
-        function updateWeight(item, piecesPerKg) {
-            let weightInput = document.getElementById(`${item}-weight`);
-            let quantityInput = document.getElementById(`${item}-quantity`);
-            
-            if (quantityInput.dataset.updating) return;
-            
-            quantityInput.dataset.updating = true;
-            let quantity = parseInt(quantityInput.value) || 0;
-            let autoWeight = quantity / piecesPerKg;
-            weightInput.value = autoWeight > 0 ? autoWeight.toFixed(2) : "";
-            delete quantityInput.dataset.updating;
+        // Mark quantity as manually edited
+        function markAsEdited(item) {
+            document.getElementById(`${item}-quantity`).dataset.edited = true;
         }
-
-        // Global variables to store calculation results
-        let foodSalesData = [];
-        let drinksSalesData = [];
-        let foodTotalAmount = 0;
-        let drinksTotalAmount = 0;
 
         // Reset food form
         function resetFoodForm() {
@@ -460,13 +364,13 @@
                 const weightInput = document.getElementById(`${item}-weight`);
                 const quantityInput = document.getElementById(`${item}-quantity`);
                 if (weightInput) weightInput.value = '';
-                if (quantityInput) quantityInput.value = '';
+                if (quantityInput) {
+                    quantityInput.value = '';
+                    delete quantityInput.dataset.edited;
+                }
             });
-            
-            // Reset food data and update combined summary
-            foodSalesData = [];
-            foodTotalAmount = 0;
-            updateCombinedSummary();
+            updateFoodSummary([]);
+            updateGrandTotal();
         }
 
         // Reset drinks form
@@ -480,92 +384,18 @@
             document.getElementById('total-drink-prev').textContent = '-';
             document.getElementById('total-drink-curr').textContent = '-';
             document.getElementById('total-drink-sold').textContent = '0';
-            document.getElementById('drinks-total').textContent = '0 Tk';
-            
-            // Reset drinks data and update combined summary
-            drinksSalesData = [];
-            drinksTotalAmount = 0;
-            updateCombinedSummary();
-        }
-
-        // Calculate food sales
-        function calculateFood() {
-            const foodItems = [
-                { name: 'Tehari', id: 'tehari', price: 120 },
-                { name: 'Khichuri', id: 'khichuri', price: 40 },
-                { name: 'Polaw', id: 'polaw', price: 40 },
-                { name: 'Roast', id: 'roast', price: 100 },
-                { name: 'Meat', id: 'meat', price: 240 }, // Price per kg (10 pcs at 24 Tk each)
-                { name: 'Egg', id: 'egg', price: 20 },
-                { name: 'Kacchi', id: 'kacchi', price: 150 }
-            ];
-            
-            let totalAmount = 0;
-            foodSalesData = [];
-            
-            foodItems.forEach(item => {
-                let quantity = 0;
-                
-                if (item.id === 'meat') {
-                    // Special case for meat: 0.5 kg = 120 Tk
-                    const weight = parseFloat(document.getElementById(`${item.id}-weight`).value) || 0;
-                    quantity = parseInt(document.getElementById(`${item.id}-quantity`).value) || 0;
-                    const amount = weight * 240; // 240 Tk per kg
-                    
-                    if (quantity > 0 || weight > 0) {
-                        totalAmount += amount;
-                        foodSalesData.push({
-                            name: item.name,
-                            quantity: quantity,
-                            weight: weight > 0 ? `${weight} kg` : '',
-                            price: `${item.price} Tk/kg`,
-                            amount: amount
-                        });
-                    }
-                } else if (['tehari', 'khichuri', 'polaw', 'kacchi'].includes(item.id)) {
-                    // Items with weight and quantity
-                    const weight = parseFloat(document.getElementById(`${item.id}-weight`).value) || 0;
-                    quantity = parseInt(document.getElementById(`${item.id}-quantity`).value) || 0;
-                    const amount = quantity * item.price;
-                    
-                    if (quantity > 0 || weight > 0) {
-                        totalAmount += amount;
-                        foodSalesData.push({
-                            name: item.name,
-                            quantity: quantity,
-                            weight: weight > 0 ? `${weight} kg` : '',
-                            price: `${item.price} Tk`,
-                            amount: amount
-                        });
-                    }
-                } else {
-                    // Items with only quantity (roast, egg)
-                    quantity = parseInt(document.getElementById(`${item.id}-quantity`).value) || 0;
-                    const amount = quantity * item.price;
-                    
-                    if (quantity > 0) {
-                        totalAmount += amount;
-                        foodSalesData.push({
-                            name: item.name,
-                            quantity: quantity,
-                            price: `${item.price} Tk`,
-                            amount: amount
-                        });
-                    }
-                }
-            });
-            
-            foodTotalAmount = totalAmount;
-            updateCombinedSummary();
+            document.getElementById('total-drink-amount').textContent = '0 Tk';
+            updateDrinksSummary([]);
+            updateGrandTotal();
         }
 
         // Calculate drinks sales
         function calculateDrinks() {
             const drinks = [
-                { name: '20 Tk Drink', price: 20, id: '20' },
-                { name: '30 Tk Drink', price: 30, id: '30' },
-                { name: '40 Tk Drink', price: 40, id: '40' },
-                { name: '50 Tk Drink', price: 50, id: '50' }
+                { price: 20, id: '20' },
+                { price: 30, id: '30' },
+                { price: 40, id: '40' },
+                { price: 50, id: '50' }
             ];
             
             let totalPrev = 0;
@@ -573,12 +403,12 @@
             let totalSold = 0;
             let totalAmount = 0;
             let resultsHTML = '';
-            drinksSalesData = [];
+            let summaryData = [];
             
             drinks.forEach(drink => {
                 const prev = parseInt(document.getElementById(`drink${drink.id}-prev`).value) || 0;
                 const curr = parseInt(document.getElementById(`drink${drink.id}-curr`).value) || 0;
-                const sold = Math.max(0, prev - curr); // Ensure sold is not negative
+                const sold = prev - curr;
                 const amount = sold * drink.price;
                 
                 totalPrev += prev;
@@ -589,19 +419,16 @@
                 if (prev > 0 || curr > 0) {
                     resultsHTML += `
                         <tr>
-                            <td class="py-2 px-4">${drink.price} Tk</td>
-                            <td class="py-2 px-4 text-right">${prev}</td>
-                            <td class="py-2 px-4 text-right">${curr}</td>
-                            <td class="py-2 px-4 text-right">${sold}</td>
-                            <td class="py-2 px-4 text-right">${amount} Tk</td>
+                            <td class="px-4 py-2">${drink.price} Tk Drinks</td>
+                            <td class="px-4 py-2">${prev}</td>
+                            <td class="px-4 py-2">${curr}</td>
+                            <td class="px-4 py-2">${sold}</td>
+                            <td class="px-4 py-2">${amount} Tk</td>
                         </tr>
                     `;
                     
-                    drinksSalesData.push({
-                        name: drink.name,
-                        price: drink.price,
-                        prev: prev,
-                        curr: curr,
+                    summaryData.push({
+                        name: `${drink.price} Tk Drinks`,
                         sold: sold,
                         amount: amount
                     });
@@ -612,76 +439,120 @@
             document.getElementById('total-drink-prev').textContent = totalPrev;
             document.getElementById('total-drink-curr').textContent = totalCurr;
             document.getElementById('total-drink-sold').textContent = totalSold;
-            document.getElementById('drinks-total').textContent = `${totalAmount} Tk`;
+            document.getElementById('total-drink-amount').textContent = `${totalAmount} Tk`;
             
-            drinksTotalAmount = totalAmount;
-            updateCombinedSummary();
+            updateDrinksSummary(summaryData);
+            updateGrandTotal();
         }
 
-        // Update combined summary
-        function updateCombinedSummary() {
-            // Update food summary
-            if (foodSalesData.length === 0) {
-                document.getElementById('combined-food-summary').innerHTML = '<p>No food items calculated yet.</p>';
-            } else {
-                let foodSummaryHTML = '<table class="min-w-full"><thead><tr class="bg-red-50">' +
-                                     '<th class="py-1 px-2 text-left">Item</th>' +
-                                     '<th class="py-1 px-2 text-right">Qty</th>' +
-                                     '<th class="py-1 px-2 text-right">Price</th>' +
-                                     '<th class="py-1 px-2 text-right">Amount</th></tr></thead><tbody>';
-                
-                foodSalesData.forEach(item => {
-                    foodSummaryHTML += `<tr>
-                        <td class="py-1 px-2">${item.name}</td>
-                        <td class="py-1 px-2 text-right">${item.quantity} ${item.weight ? `(${item.weight})` : ''}</td>
-                        <td class="py-1 px-2 text-right">${item.price}</td>
-                        <td class="py-1 px-2 text-right">${item.amount} Tk</td>
-                    </tr>`;
-                });
-                
-                foodSummaryHTML += `</tbody><tfoot class="border-t border-red-300">
-                    <tr class="font-medium">
-                        <td class="py-1 px-2" colspan="3">Subtotal</td>
-                        <td class="py-1 px-2 text-right">${foodTotalAmount} Tk</td>
-                    </tr>
-                </tfoot></table>`;
-                
-                document.getElementById('combined-food-summary').innerHTML = foodSummaryHTML;
+        // Calculate total food sales
+        function calculateTotal() {
+            const prices = {
+                tehari: 120, khichuri: 40, polaw: 40, 
+                roast: 100, meat: 120, egg: 20, kacchi: 150
+            };
+            const itemNames = {
+                tehari: "Tehari", khichuri: "Khichuri", polaw: "Polaw",
+                roast: "Roast", meat: "Meat", egg: "Egg", kacchi: "Kacchi"
+            };
+            const piecesPerKg = {
+                tehari: 12, khichuri: 12, polaw: 10, 
+                meat: 10, kacchi: 10
+            };
+
+            let foodTotal = 0;
+            let foodItems = [];
+            
+            Object.keys(prices).forEach(item => {
+                let weightInput = document.getElementById(`${item}-weight`);
+                let quantityInput = document.getElementById(`${item}-quantity`);
+
+                let weight = parseFloat(weightInput?.value) || 0;
+                let quantity = parseFloat(quantityInput?.value) || (weight * (piecesPerKg[item] || 1));
+                let itemTotal = quantity * prices[item];
+
+                if (quantity > 0) {
+                    foodTotal += itemTotal;
+                    foodItems.push({
+                        name: itemNames[item],
+                        quantity: quantity,
+                        total: itemTotal
+                    });
+                }
+            });
+            
+            updateFoodSummary(foodItems);
+            updateGrandTotal();
+        }
+
+        // Update food summary display
+        function updateFoodSummary(items) {
+            const foodSummary = document.getElementById('food-summary');
+            const foodTotalElement = document.getElementById('food-total');
+            
+            if (items.length === 0) {
+                foodSummary.innerHTML = '<p class="text-gray-500 text-center py-4">No food sales calculated yet</p>';
+                foodTotalElement.textContent = '0 Tk';
+                return;
             }
             
-            // Update drinks summary
-            if (drinksSalesData.length === 0) {
-                document.getElementById('combined-drinks-summary').innerHTML = '<p>No drinks calculated yet.</p>';
-            } else {
-                let drinksSummaryHTML = '<table class="min-w-full"><thead><tr class="bg-red-50">' +
-                                       '<th class="py-1 px-2 text-left">Drink</th>' +
-                                       '<th class="py-1 px-2 text-right">Sold</th>' +
-                                       '<th class="py-1 px-2 text-right">Amount</th></tr></thead><tbody>';
-                
-                drinksSalesData.forEach(item => {
-                    drinksSummaryHTML += `<tr>
-                        <td class="py-1 px-2">${item.price} Tk Drink</td>
-                        <td class="py-1 px-2 text-right">${item.sold}</td>
-                        <td class="py-1 px-2 text-right">${item.amount} Tk</td>
-                    </tr>`;
-                });
-                
-                drinksSummaryHTML += `</tbody><tfoot class="border-t border-red-300">
-                    <tr class="font-medium">
-                        <td class="py-1 px-2" colspan="2">Subtotal</td>
-                        <td class="py-1 px-2 text-right">${drinksTotalAmount} Tk</td>
-                    </tr>
-                </tfoot></table>`;
-                
-                document.getElementById('combined-drinks-summary').innerHTML = drinksSummaryHTML;
+            let summaryHTML = '<div class="space-y-2">';
+            let foodTotal = 0;
+            
+            items.forEach(item => {
+                summaryHTML += `
+                    <div class="flex justify-between text-sm">
+                        <span>${item.name} (${item.quantity} pcs):</span>
+                        <span>${item.total} Tk</span>
+                    </div>
+                `;
+                foodTotal += item.total;
+            });
+            
+            summaryHTML += '</div>';
+            foodSummary.innerHTML = summaryHTML;
+            foodTotalElement.textContent = `${foodTotal} Tk`;
+        }
+
+        // Update drinks summary display
+        function updateDrinksSummary(items) {
+            const drinksSummary = document.getElementById('drinks-summary');
+            const drinksTotalElement = document.getElementById('drinks-total');
+            
+            if (items.length === 0) {
+                drinksSummary.innerHTML = '<p class="text-gray-500 text-center py-4">No drinks sales calculated yet</p>';
+                drinksTotalElement.textContent = '0 Tk';
+                return;
             }
             
-            // Update grand total
-            const grandTotal = foodTotalAmount + drinksTotalAmount;
+            let summaryHTML = '<div class="space-y-2">';
+            let drinksTotal = 0;
+            
+            items.forEach(item => {
+                summaryHTML += `
+                    <div class="flex justify-between text-sm">
+                        <span>${item.name} (${item.sold} pcs):</span>
+                        <span>${item.amount} Tk</span>
+                    </div>
+                `;
+                drinksTotal += item.amount;
+            });
+            
+            summaryHTML += '</div>';
+            drinksSummary.innerHTML = summaryHTML;
+            drinksTotalElement.textContent = `${drinksTotal} Tk`;
+        }
+
+        // Update grand total
+        function updateGrandTotal() {
+            const foodTotal = parseFloat(document.getElementById('food-total').textContent) || 0;
+            const drinksTotal = parseFloat(document.getElementById('drinks-total').textContent) || 0;
+            const grandTotal = foodTotal + drinksTotal;
+            
             document.getElementById('grand-total').textContent = `${grandTotal} Tk`;
         }
-        
-        // Print summary function
+
+        // Print summary
         function printSummary() {
             window.print();
         }
